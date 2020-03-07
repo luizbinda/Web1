@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Grafico01</h2>
+    <canvas
+      id="grafico01"
+      width="600"
+      height="300"
+      style="background-color: white"
+    >
+    </canvas>
+    <script>
+      var canvas = document.getElementById("grafico01");
+      var ctx = canvas.getContext("2d");
+
+      function desenharLinhas(numLinhas, distanciaLinhasNum, valorInicial) {
+        distanciaLinhas = distanciaLinhasNum - 5;
+        valor = valorInicial;
+        for (let index = 0; index < numLinhas; index++) {
+          ctx.strokeStyle = "#555";
+          ctx.lineWidth = 1; /*Define a espessura da linha do retÃ¢ngulo*/
+          ctx.strokeRect(30, distanciaLinhas, 450, 0);
+          ctx.fillText(valor, 10, distanciaLinhas);
+          distanciaLinhas += distanciaLinhasNum;
+          valor -= 100;
+        }
+      }
+      desenharLinhas(10, 25, 900);
+
+      function desenharColunas(distanciaEsquerda, baixo, cima, cor) {
+        ctx.lineWidth = 2;
+        ctx.fillStyle = cor;
+        ctx.fillRect(distanciaEsquerda, baixo, 30, cima);
+      }
+      desenharColunas(60, 45, 200, "rgba(0,0,255,0.95)");
+      desenharColunas(95, 95, 150, "rgba(255,0,0,0.95)");
+      desenharColunas(130, 235, 10, "rgba(0,250,0,0.95)");
+
+      desenharColunas(200, 95, 150, "rgba(0,0,255,0.95)");
+      desenharColunas(235, 70, 175, "rgba(255,0,0,0.95)");
+      desenharColunas(270, 225, 20, "rgba(0,250,0,0.95)");
+
+      desenharColunas(340, 230, 15, "rgba(0,0,255,0.95)"); //230 15
+      desenharColunas(375, 110, 135, "rgba(255,0,0,0.95)");
+      desenharColunas(410, 205, 40, "rgba(0,250,0,0.95)");
+
+      ctx.lineWidth = 2;
+      ctx.fillStyle = "rgba(0,0,255,1)";
+      ctx.fillRect(150, 260, 10, 10);
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("2013", 165, 268);
+
+      ctx.fillStyle = "rgba(255,0,0,1)";
+      ctx.fillRect(210, 260, 10, 10);
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("2014", 225, 268);
+
+      ctx.fillStyle = "rgba(0,255,0,1)";
+      ctx.fillRect(280, 260, 10, 10);
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("2015", 295, 268);
+    </script>
+    <br />
+    <h2>Grafico02</h2>
+    <canvas
+      id="quadro07"
+      width="700"
+      height="300"
+      style="background-color: white"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro07");
+      var ctx = canvas.getContext("2d");
+
+      function Circle(x, y, raio, anguloInicial, AnguloFinal, sentido, cor) {
+        ctx.beginPath();
+        ctx.fillStyle = cor; //Informa a cor do preenchimento
+        ctx.arc(x, y, raio, anguloInicial, AnguloFinal, sentido); //360
+        ctx.lineTo(300, 150);
+        ctx.fill(); //Executa o preenchimento
+      }
+
+      function RToP(porcent) {
+        return (porcent / 100) * (Math.PI * 2);
+      }
+
+      ctx.font = "20px Arial";
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("36%", 345, 268);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("29%", 150, 168);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("11%", 250, 40);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("7%", 320, 40);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("17%", 400, 100);
+
+      ctx.fillStyle = "rgba(105,0,0,1)";
+      ctx.fillRect(500, 50, 20, 20);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("Sem Filho", 530, 65);
+
+      ctx.fillStyle = "rgba(0,105,0,1)";
+      ctx.fillRect(500, 85, 20, 20);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("1 Filho", 530, 100);
+
+      ctx.fillStyle = "rgba(0,0,105,1)";
+      ctx.fillRect(500, 125, 20, 20);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("2 Filhos", 530, 142);
+
+      ctx.fillStyle = "rgba(200,200,10,1)";
+      ctx.fillRect(500, 160, 20, 20);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("3 Filhos", 530, 177);
+
+      ctx.fillStyle = "rgba(80,80,80,1)";
+      ctx.fillRect(500, 195, 20, 20);
+
+      ctx.fillStyle = "rgba(0,0,0,1)";
+      ctx.fillText("3 Filhos", 530, 213);
+
+      Circle(300, 150, 100, RToP(0), RToP(36), false, "rgba(0,105,0,1)");
+      Circle(300, 150, 100, RToP(36), RToP(65), false, "rgba(0,0,105,1)");
+      Circle(300, 150, 100, RToP(65), RToP(76), false, "rgba(200,200,10,1)");
+      Circle(300, 150, 100, RToP(76), RToP(83), false, "rgba(80,80,80,1)");
+      Circle(300, 150, 100, RToP(83), RToP(100), false, "rgba(105,0,0,1)");
+    </script>
+  </body>
+</html>

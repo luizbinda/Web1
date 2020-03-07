@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>HTML Básico com Pulini</title>
+    <link rel="stylesheet" type="text/css" href="CSS/estiloCanvas.css" />
+  </head>
+  <body>
+    <h2>Função strokeRect</h2>
+    <p>Função desenha o contorno de um retangulo.</p>
+    <canvas
+      id="quadro01"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+    <script>
+      var canvas = document.getElementById("quadro01");
+      var ctx = canvas.getContext("2d");
+
+      ctx.strokeStyle = "#f00"; /*Define a cor da linha*/
+      ctx.lineWidth = 2; /*Define a espessura da linha do retÃ¢ngulo*/
+      ctx.strokeRect(30, 30, 80, 40); /*Desenha o contorno do retÃ¢ngulo*/
+
+      ctx.strokeStyle = "#00f";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(230, 100, 140, 90);
+
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.fillStyle =
+        "rgba(0,255,0,0.4)"; /*Define a cor de preenchimento do elemento grÃ¡fico*/
+
+      ctx.fillRect(150, 60, 200, 70); /*Cria um retÃ¢ngulo de cor sÃ³lida*/
+      ctx.strokeRect(148, 58, 204, 74);
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o clearRect</h2>
+    <p>MÃ©todo apaga uma Ã¡rea do canvas</p>
+    <canvas
+      id="quadro02"
+      width="400"
+      height="200"
+      style="background-color: green"
+    >
+    </canvas>
+    <script>
+      var canvas = document.getElementById("quadro02");
+      var ctx = canvas.getContext("2d");
+
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.fillStyle = "#099";
+      ctx.fillRect(20, 30, 300, 150);
+      ctx.strokeRect(18, 28, 304, 154);
+      ctx.clearRect(50, 60, 180, 100); /*Apaga uma Ã¡rea do canvas*/
+    </script>
+    <br />
+
+    <h2>shadow</h2>
+    <p>Atributos para sombreamento dos elementos canvas.</p>
+    <canvas
+      id="quadro03"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+    <script>
+      var canvas = document.getElementById("quadro03");
+      var ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#0f0";
+      ctx.shadowColor = "#000"; /*Define a cor da sombra*/
+      ctx.shadowOffsetX = 4; /*Espessura da sombra*/
+      ctx.shadowOffsetY = 8; /*deslocamento da sombra*/
+      ctx.shadowBlur = 10; /*Desfoque da sombra*/
+
+      ctx.fillRect(40, 20, 290, 150);
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o moveTo lineTo</h2>
+    <p>Cria um caminho.</p>
+
+    <canvas
+      id="quadro04"
+      width="400"
+      height="200"
+      style="background-color: green"
+    ></canvas>
+    <script>
+      var canvas = document.getElementById("quadro04");
+      var ctx = canvas.getContext("2d");
+
+      ctx.beginPath(); /*Inicia novo Caminho*/
+      ctx.strokeStyle = "#f00"; /*Cor do Caminho*/
+      ctx.lineWidth = 2; /*Espessura da linha*/
+      ctx.moveTo(20, 20); /*Posiciona a pena de desenho nas posiÃ§Ãµes x, y */
+      ctx.lineTo(
+        80,
+        120
+      ); /*Desenha uma reta da posiÃ§Ã£o atual atÃ© a posicao x, y*/
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#009";
+      ctx.lineWidth = 2;
+      ctx.moveTo(80, 120);
+      ctx.lineTo(150, 30);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#090";
+      ctx.lineWidth = 2;
+      ctx.moveTo(150, 30);
+      ctx.lineTo(350, 180);
+      ctx.stroke();
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o arcTo</h2>
+    <p>
+      Cria arcos. FunÃ§Ã£o arcTo(x inicial, y inicial, x final, y final , raio)
+    </p>
+
+    <canvas
+      id="quadro05"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro05");
+      var ctx = canvas.getContext("2d");
+
+      ctx.beginPath();
+      ctx.moveTo(
+        20,
+        50
+      ); /*Posiciona a pena na coordenada para iniciar o desenho*/
+      ctx.strokeStyle = "#f00";
+      ctx.arcTo(100, 50, 100, 130, 80);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(100, 130);
+      ctx.strokeStyle = "#009";
+      ctx.arcTo(200, 130, 200, 30, 100);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(200, 30);
+      ctx.strokeStyle = "#090";
+      ctx.arcTo(200, 190, 380, 190, 180);
+      ctx.stroke();
+    </script>
+
+    <br />
+
+    <h2>FunÃ§Ã£o arc</h2>
+    <p>
+      Cria arcos. FunÃ§Ã£o ctx.arc(x , y , raio, angulo Inicial, Angulo Final,
+      sentido)
+    </p>
+
+    <canvas
+      id="quadro06"
+      width="400"
+      height="200"
+      style="background-color: green"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro06");
+      var ctx = canvas.getContext("2d");
+
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#f00";
+      ctx.arc(80, 100, 40, 0, Math.PI * 2, true); /*360*/
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#803";
+      ctx.arc(200, 100, 40, 0, Math.PI, true); /*180*/
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#00f";
+      ctx.arc(200, 100, 40, 0, Math.PI, false); /*180*/
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#f90";
+      ctx.arc(320, 100, 40, 0, (3 / 4) * Math.PI, true); /*135*/
+      ctx.stroke();
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o fill()</h2>
+    <p>Preenche com uma cor sÃ³lida um caminho</p>
+
+    <canvas
+      id="quadro07"
+      width="400"
+      height="200"
+      style="background-color: green"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro07");
+      var ctx = canvas.getContext("2d");
+
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#f00";
+      ctx.fillStyle = "#0ff"; /*Informa a cor do preenchimento*/
+      ctx.arc(80, 100, 40, 0, Math.PI * 2, true); /*360*/
+      ctx.fill(); /*Executa o preenchimento*/
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#803";
+      ctx.fillStyle = "#996";
+      ctx.arc(200, 100, 40, 0, Math.PI, true); /*180*/
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#00f";
+      ctx.fillStyle = "#c6c";
+      ctx.arc(200, 100, 40, 0, Math.PI, false); /*180*/
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#f90";
+      ctx.fillStyle = "#0c0";
+      ctx.arc(320, 100, 40, 0, (3 / 4) * Math.PI, true); /*135*/
+      ctx.fill();
+      ctx.stroke();
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o rect(x, y, largura, altura)</h2>
+    <p>Desenha um retangulo</p>
+
+    <canvas
+      id="quadro08"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro08");
+      var ctx = canvas.getContext("2d");
+
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#f00";
+      ctx.fillStyle = "#0ff";
+      ctx.rect(50, 60, 200, 120);
+      ctx.fill();
+      ctx.stroke();
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o closePath</h2>
+    <p>Destina-se a fazer um fechamento do caminho</p>
+
+    <canvas
+      id="quadro09"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro09");
+      var ctx = canvas.getContext("2d");
+
+      ctx.lineWidth = 2;
+      ctx.moveTo(20, 20);
+      ctx.strokeStyle = "#f00";
+      ctx.lineTo(80, 190);
+      ctx.lineTo(180, 160);
+      ctx.lineTo(220, 20);
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#090";
+      ctx.arc(300, 100, 80, 0, (-3 / 2) * Math.PI, true);
+      ctx.closePath();
+      ctx.stroke();
+    </script>
+    <br />
+
+    <h2>FunÃ§Ã£o globalAlpha</h2>
+    <p>Trata transparÃªncia das formas</p>
+
+    <canvas
+      id="quadro10"
+      width="400"
+      height="200"
+      style="background-color: green"
+    >
+    </canvas>
+
+    <script>
+      window.onload = function() {
+        var canvas = document.getElementById("quadro10");
+        var ctx = canvas.getContext("2d");
+
+        /*ctx lineJoin = round; Define como as formas se unem (miter bevel round)*/
+        /*ctx.lineCap  = square;Define a forma de acabamento das extremidades (butt round square)*/
+        ctx.globalAlpha = 0.5; /*Define a transparÃªncia da forma varia de 0-1*/
+
+        ctx.lineWidth = 50;
+        ctx.beginPath();
+        ctx.moveTo(100, 40);
+        ctx.strokeStyle = "#f00";
+        ctx.lineTo(100, 130);
+        ctx.lineTo(350, 130);
+        ctx.stroke();
+      };
+    </script>
+    <br />
+
+    <h2>Gradiente linear</h2>
+    <p>Cria gradiente linear. createLinearGradient(x,y,x1,y1)</p>
+
+    <canvas
+      id="quadro11"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro11");
+      var ctx = canvas.getContext("2d");
+
+      gradient = ctx.createLinearGradient(
+        10,
+        10,
+        250,
+        100
+      ); /*cria gradiente linear (x, y, x fim, y fim)*/
+      gradient.addColorStop(
+        0,
+        "#f00"
+      ); /*Define como cores do gradiente serÃ£o distribuidas; 0 cor de inicio; 1 cor de fim*/
+      gradient.addColorStop(1, "#00f");
+
+      gradient1 = ctx.createLinearGradient(330, 20, 330, 160);
+      gradient1.addColorStop(0, "#090");
+      gradient1.addColorStop(0.5, "#ff9");
+      gradient1.addColorStop(1, "#9cf");
+
+      gradient2 = ctx.createLinearGradient(60, 120, 180, 120);
+      gradient2.addColorStop(0, "#f90");
+      gradient2.addColorStop(1, "#ffc");
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(10, 10, 250, 100);
+      ctx.fillStyle = gradient1;
+      ctx.fillRect(280, 20, 100, 160);
+      ctx.fillStyle = gradient2;
+      ctx.arc(120, 120, 60, 0, 2 * Math.PI, true);
+      ctx.fill();
+    </script>
+    <br />
+
+    <h2>Gradiente Radial</h2>
+    <p>Cria Gradiente Radial; createRadialGradient(x,y,r,x1,y1,r1)</p>
+
+    <canvas
+      id="quadro12"
+      width="400"
+      height="200"
+      style="background-color: green"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro12");
+      var ctx = canvas.getContext("2d");
+
+      gradient = ctx.createRadialGradient(130, 60, 10, 130, 60, 160);
+      gradient.addColorStop(0, "#f00");
+      gradient.addColorStop(1, "#00f");
+
+      gradient1 = ctx.createRadialGradient(330, 50, 5, 330, 50, 130);
+      gradient1.addColorStop(0, "#090");
+      gradient1.addColorStop(0.5, "#fd8");
+      gradient1.addColorStop(1, "#9cf");
+
+      gradient2 = ctx.createRadialGradient(100, 100, 5, 100, 100, 60);
+      gradient2.addColorStop(0, "#f90");
+      gradient2.addColorStop(1, "#f5f5f5");
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(10, 10, 250, 100);
+      ctx.fillStyle = gradient1;
+      ctx.fillRect(280, 20, 100, 160);
+
+      ctx.fillStyle = gradient2;
+      ctx.arc(120, 120, 60, 0, 2 * Math.PI, true);
+      ctx.fill();
+    </script>
+    <br />
+
+    <h2>fillText e strokeText</h2>
+    <p>
+      Escreve um texto. fillText("Texto", x, y) ou strokeText("Texto", x, y)
+    </p>
+    <p>
+      A diferenÃ§a Ã© que o fill serve para escrever textos preenchidos,
+      'pintados' por dentro. JÃ¡ o stroke Ã© somente o traÃ§o, ou seja, o
+      contorno.
+    </p>
+
+    <canvas
+      id="quadro14"
+      width="400"
+      height="200"
+      style="background-color: yellow"
+    >
+    </canvas>
+
+    <script>
+      var canvas = document.getElementById("quadro14");
+      var ctx = canvas.getContext("2d");
+      ctx.font = "22px Georgia";
+      ctx.fillStyle = "green";
+      ctx.fillText("Podemos escrever um texto assim!", 30, 50);
+
+      ctx.font = "100px arial";
+      ctx.lineWidth = 4;
+
+      ctx.fillStyle = "blue";
+      ctx.fillText("I", 90, 150);
+
+      ctx.strokeStyle = "green";
+      ctx.strokeText("C", 140, 150);
+
+      //USANDO AS DUAS FUNÃ‡Ã•ES JUNTAS
+      ctx.fillText("P", 240, 150);
+      ctx.strokeText("P", 240, 150);
+    </script>
+    <br />
+  </body>
+</html>
