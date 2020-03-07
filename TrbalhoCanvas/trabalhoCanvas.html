@@ -13,58 +13,7 @@
       height="300"
       style="background-color: white"
     >
-    </canvas>
-    <script>
-      var canvas = document.getElementById("grafico01");
-      var ctx = canvas.getContext("2d");
-
-      function desenharLinhas(numLinhas, distanciaLinhasNum, valorInicial) {
-        distanciaLinhas = distanciaLinhasNum - 5;
-        valor = valorInicial;
-        for (let index = 0; index < numLinhas; index++) {
-          ctx.strokeStyle = "#555";
-          ctx.lineWidth = 1; /*Define a espessura da linha do retÃ¢ngulo*/
-          ctx.strokeRect(30, distanciaLinhas, 450, 0);
-          ctx.fillText(valor, 10, distanciaLinhas);
-          distanciaLinhas += distanciaLinhasNum;
-          valor -= 100;
-        }
-      }
-      desenharLinhas(10, 25, 900);
-
-      function desenharColunas(distanciaEsquerda, baixo, cima, cor) {
-        ctx.lineWidth = 2;
-        ctx.fillStyle = cor;
-        ctx.fillRect(distanciaEsquerda, baixo, 30, cima);
-      }
-      desenharColunas(60, 45, 200, "rgba(0,0,255,0.95)");
-      desenharColunas(95, 95, 150, "rgba(255,0,0,0.95)");
-      desenharColunas(130, 235, 10, "rgba(0,250,0,0.95)");
-
-      desenharColunas(200, 95, 150, "rgba(0,0,255,0.95)");
-      desenharColunas(235, 70, 175, "rgba(255,0,0,0.95)");
-      desenharColunas(270, 225, 20, "rgba(0,250,0,0.95)");
-
-      desenharColunas(340, 230, 15, "rgba(0,0,255,0.95)"); //230 15
-      desenharColunas(375, 110, 135, "rgba(255,0,0,0.95)");
-      desenharColunas(410, 205, 40, "rgba(0,250,0,0.95)");
-
-      ctx.lineWidth = 2;
-      ctx.fillStyle = "rgba(0,0,255,1)";
-      ctx.fillRect(150, 260, 10, 10);
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("2013", 165, 268);
-
-      ctx.fillStyle = "rgba(255,0,0,1)";
-      ctx.fillRect(210, 260, 10, 10);
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("2014", 225, 268);
-
-      ctx.fillStyle = "rgba(0,255,0,1)";
-      ctx.fillRect(280, 260, 10, 10);
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("2015", 295, 268);
-    </script>
+    </canvas>    
     <br />
     <h2>Grafico02</h2>
     <canvas
@@ -74,155 +23,18 @@
       style="background-color: white"
     >
     </canvas>
-
-    <script>
-      var canvas = document.getElementById("quadro07");
-      var ctx = canvas.getContext("2d");
-
-      function Circle(x, y, raio, anguloInicial, AnguloFinal, sentido, cor) {
-        ctx.beginPath();
-        ctx.fillStyle = cor; //Informa a cor do preenchimento
-        ctx.arc(x, y, raio, anguloInicial, AnguloFinal, sentido); //360
-        ctx.lineTo(300, 150);
-        ctx.fill();
-      }
-
-      function RToP(porcent) {
-        return (porcent / 100) * (Math.PI * 2);
-      }
-
-      ctx.font = "20px Arial";
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("36%", 345, 268);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("29%", 150, 168);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("11%", 250, 40);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("7%", 320, 40);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("17%", 400, 100);
-
-      ctx.fillStyle = "rgba(105,0,0,1)";
-      ctx.fillRect(500, 50, 20, 20);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("Sem Filho", 530, 65);
-
-      ctx.fillStyle = "rgba(0,105,0,1)";
-      ctx.fillRect(500, 85, 20, 20);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("1 Filho", 530, 100);
-
-      ctx.fillStyle = "rgba(0,0,105,1)";
-      ctx.fillRect(500, 125, 20, 20);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("2 Filhos", 530, 142);
-
-      ctx.fillStyle = "rgba(200,200,10,1)";
-      ctx.fillRect(500, 160, 20, 20);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("3 Filhos", 530, 177);
-
-      ctx.fillStyle = "rgba(80,80,80,1)";
-      ctx.fillRect(500, 195, 20, 20);
-
-      ctx.fillStyle = "rgba(0,0,0,1)";
-      ctx.fillText("3 Filhos", 530, 213);
-
-      Circle(300, 150, 100, RToP(0), RToP(36), false, "rgba(0,105,0,1)");
-      Circle(300, 150, 100, RToP(36), RToP(65), false, "rgba(0,0,105,1)");
-      Circle(300, 150, 100, RToP(65), RToP(76), false, "rgba(200,200,10,1)");
-      Circle(300, 150, 100, RToP(76), RToP(83), false, "rgba(80,80,80,1)");
-      Circle(300, 150, 100, RToP(83), RToP(100), false, "rgba(105,0,0,1)");
-    </script>
-
     <br />
     <h2>Grafico03</h2>
     <canvas
       id="grafico03"
-      width="500"
+      width="430  "
       height="400"
       style="background-color: black"
     >
     </canvas>
-    <script>
-      var canvas = document.getElementById("grafico03");
-      var ctx = canvas.getContext("2d");
-      function RToP(porcent) {
-        return (porcent / 100) * (Math.PI * 2);
-      }
-
-      function desenharLinhas(numLinhas, distanciaLinhasNum, valorInicial) {
-        distanciaLinhas = distanciaLinhasNum - 40;
-        ctx.fillStyle = "rgba(200,200,200,1)";
-        ctx.strokeStyle = "rgba(200,200,200,1)";
-
-        valor = valorInicial;
-        for (let index = 0; index < numLinhas; index++) {
-          ctx.lineWidth = 1; /*Define a espessura da linha do retÃ¢ngulo*/
-          ctx.strokeRect(30, distanciaLinhas, 410, 0);
-          ctx.fillText(valor, 10, distanciaLinhas);
-          distanciaLinhas += distanciaLinhasNum;
-          valor -= 10;
-        }
-      }
-      desenharLinhas(5, 70, 40);
-      function desenharcirculoGrafico(x, y, cor) {
-        ctx.beginPath();
-        ctx.lineWidth = 8;
-        ctx.strokeStyle = cor;
-        ctx.fillStyle = "rgba(255,255,255,1)"; //Informa a cor do preenchimento
-        ctx.arc(x, y, 3, RToP(0), RToP(100), true); //360
-        ctx.stroke();
-        ctx.fill(); //Executa o preenchimento
-      }
-      function desenharLinhasGrafico(xInicio, yInicio, xFim, yFim, cor) {
-        ctx.beginPath(); /*Inicia novo Caminho*/
-        ctx.strokeStyle = cor; /*Cor do Caminho*/
-        ctx.lineWidth = 4;
-        ctx.moveTo(xInicio, yInicio);
-        ctx.lineTo(xFim, yFim);
-        ctx.stroke();
-        desenharcirculoGrafico(xInicio, yInicio, cor);
-        desenharcirculoGrafico(xFim, yFim, cor);
-      }
-
-      desenharLinhasGrafico(30, 310, 140, 265, "rgba(0,80,255,1)");
-      desenharLinhasGrafico(140, 265, 210, 210, "rgba(0,80,255,1)");
-      desenharLinhasGrafico(210, 210, 260, 220, "rgba(0,80,255,1)");
-      desenharLinhasGrafico(260, 220, 385, 158, "rgba(0,80,255,1)");
-
-      desenharLinhasGrafico(30, 310, 110, 305, "rgba(0,130,0,1)");
-      desenharLinhasGrafico(110, 305, 185, 285, "rgba(0,130,0,1)");
-      desenharLinhasGrafico(185, 285, 245, 275, "rgba(0,130,0,1)");
-      desenharLinhasGrafico(245, 275, 350, 240, "rgba(0,130,0,1)");
-
-      desenharLinhasGrafico(30, 310, 110, 295, "rgba(255,45,0,1)");
-      desenharLinhasGrafico(110, 295, 185, 280, "rgba(255,45,0,1)");
-      desenharLinhasGrafico(185, 280, 250, 195, "rgba(255,45,0,1)");
-      desenharLinhasGrafico(250, 195, 370, 105, "rgba(255,45,0,1)");
-      desenharLinhasGrafico(370, 105, 434, 92, "rgba(255,45,0,1)");
-
-      function desenharLegenda(text, x, y) {
-        ctx.lineWidth = 2;
-        ctx.fillStyle = "rgba(200,200,200,1)";
-        ctx.fillText(text, x, y);
-      }
-      desenharLegenda("jan/14", 10, 350);
-      desenharLegenda("fev/14", 85, 350);
-      desenharLegenda("mar/14", 160, 350);
-      desenharLegenda("abr/14", 240, 350);
-      desenharLegenda("mai/14", 310, 350);
-      desenharLegenda("jun/14", 410, 350);
-    </script>
-    <br />
+    <br />    
   </body>
+  <script src="Grafico1.js"></script>
+  <script src="Grafico2.js"></script>
+  <script src="Grafico3.js"></script>
 </html>
