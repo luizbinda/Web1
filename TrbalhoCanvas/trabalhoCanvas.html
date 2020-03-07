@@ -84,7 +84,7 @@
         ctx.fillStyle = cor; //Informa a cor do preenchimento
         ctx.arc(x, y, raio, anguloInicial, AnguloFinal, sentido); //360
         ctx.lineTo(300, 150);
-        ctx.fill(); //Executa o preenchimento
+        ctx.fill();
       }
 
       function RToP(porcent) {
@@ -143,5 +143,86 @@
       Circle(300, 150, 100, RToP(76), RToP(83), false, "rgba(80,80,80,1)");
       Circle(300, 150, 100, RToP(83), RToP(100), false, "rgba(105,0,0,1)");
     </script>
+
+    <br />
+    <h2>Grafico03</h2>
+    <canvas
+      id="grafico03"
+      width="500"
+      height="400"
+      style="background-color: black"
+    >
+    </canvas>
+    <script>
+      var canvas = document.getElementById("grafico03");
+      var ctx = canvas.getContext("2d");
+      function RToP(porcent) {
+        return (porcent / 100) * (Math.PI * 2);
+      }
+
+      function desenharLinhas(numLinhas, distanciaLinhasNum, valorInicial) {
+        distanciaLinhas = distanciaLinhasNum - 40;
+        ctx.fillStyle = "rgba(200,200,200,1)";
+        ctx.strokeStyle = "rgba(200,200,200,1)";
+
+        valor = valorInicial;
+        for (let index = 0; index < numLinhas; index++) {
+          ctx.lineWidth = 1; /*Define a espessura da linha do retÃ¢ngulo*/
+          ctx.strokeRect(30, distanciaLinhas, 410, 0);
+          ctx.fillText(valor, 10, distanciaLinhas);
+          distanciaLinhas += distanciaLinhasNum;
+          valor -= 10;
+        }
+      }
+      desenharLinhas(5, 70, 40);
+      function desenharcirculoGrafico(x, y, cor) {
+        ctx.beginPath();
+        ctx.lineWidth = 8;
+        ctx.strokeStyle = cor;
+        ctx.fillStyle = "rgba(255,255,255,1)"; //Informa a cor do preenchimento
+        ctx.arc(x, y, 3, RToP(0), RToP(100), true); //360
+        ctx.stroke();
+        ctx.fill(); //Executa o preenchimento
+      }
+      function desenharLinhasGrafico(xInicio, yInicio, xFim, yFim, cor) {
+        ctx.beginPath(); /*Inicia novo Caminho*/
+        ctx.strokeStyle = cor; /*Cor do Caminho*/
+        ctx.lineWidth = 4;
+        ctx.moveTo(xInicio, yInicio);
+        ctx.lineTo(xFim, yFim);
+        ctx.stroke();
+        desenharcirculoGrafico(xInicio, yInicio, cor);
+        desenharcirculoGrafico(xFim, yFim, cor);
+      }
+
+      desenharLinhasGrafico(30, 310, 140, 265, "rgba(0,80,255,1)");
+      desenharLinhasGrafico(140, 265, 210, 210, "rgba(0,80,255,1)");
+      desenharLinhasGrafico(210, 210, 260, 220, "rgba(0,80,255,1)");
+      desenharLinhasGrafico(260, 220, 385, 158, "rgba(0,80,255,1)");
+
+      desenharLinhasGrafico(30, 310, 110, 305, "rgba(0,130,0,1)");
+      desenharLinhasGrafico(110, 305, 185, 285, "rgba(0,130,0,1)");
+      desenharLinhasGrafico(185, 285, 245, 275, "rgba(0,130,0,1)");
+      desenharLinhasGrafico(245, 275, 350, 240, "rgba(0,130,0,1)");
+
+      desenharLinhasGrafico(30, 310, 110, 295, "rgba(255,45,0,1)");
+      desenharLinhasGrafico(110, 295, 185, 280, "rgba(255,45,0,1)");
+      desenharLinhasGrafico(185, 280, 250, 195, "rgba(255,45,0,1)");
+      desenharLinhasGrafico(250, 195, 370, 105, "rgba(255,45,0,1)");
+      desenharLinhasGrafico(370, 105, 434, 92, "rgba(255,45,0,1)");
+
+      function desenharLegenda(text, x, y) {
+        ctx.lineWidth = 2;
+        ctx.fillStyle = "rgba(200,200,200,1)";
+        ctx.fillText(text, x, y);
+      }
+      desenharLegenda("jan/14", 10, 350);
+      desenharLegenda("fev/14", 85, 350);
+      desenharLegenda("mar/14", 160, 350);
+      desenharLegenda("abr/14", 240, 350);
+      desenharLegenda("mai/14", 310, 350);
+      desenharLegenda("jun/14", 410, 350);
+    </script>
+    <br />
   </body>
 </html>
