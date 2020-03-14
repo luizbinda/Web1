@@ -1,0 +1,166 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+img {
+  border: none;
+  padding: 5px;
+  width: 50px;
+}
+
+body {
+  font-family: "Roboto", Arial, Tahoma, sans-serif;
+}
+
+p {
+  font-size: 16px;
+  color: #626262;
+}
+
+h1,
+h2 {
+  color: #161922;
+}
+
+.menu a {
+  font-size: 20px;
+}
+
+.menu {
+  padding: 0px 0px 0px 40px;
+  display: flex;
+  align-items: center;
+  height: 164px;
+}
+
+.menu ul {
+  list-style-type: none;
+  padding: 0;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.menu li {
+  float: left;
+}
+
+.menu li a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  margin-bottom: 40px;
+}
+
+.menu li a:hover {
+  background-color: hsl(209, 94%, 32%);
+}
+
+.logo {
+  width: 100%;
+}
+
+.card {
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: hsl(209, 94%, 32%);
+  margin-bottom: 40px;
+}
+
+.card h1 {
+  margin: 0px;
+  background-color: hsl(209, 94%, 32%);
+  color: white;
+  padding: 5% 0% 5% 0%;
+}
+
+.card img {
+  width: 150px;
+  height: 100px;
+}
+
+.card h2 {
+  text-align: center;
+  padding: 0% 0% 5% 0%;
+}
+
+.card {
+  text-align: center;
+}
+
+.card button {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: 3% 3% 3% 3%;
+  color: white;
+  background-color: rgb(49, 22, 204);
+  border: none;
+}
+
+.card button:hover {
+  background-color: rgb(28, 4, 165);
+}
+
+.imagem_esquerda img {
+  width: 100px;
+  height: 89px;
+  padding: 0;
+}
+
+.imagem_esquerda p {
+  padding: 0;
+}
+
+.fale_conosco {
+  text-align: left;
+  padding-left: 10%;
+}
+
+.cardCliente {
+  text-align: center;
+}
+
+.cardCliente {
+  width: 300px;
+  height: 300px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: hsl(209, 94%, 32%);
+  margin-bottom: 40px;
+}
+
+.cardCliente h3 {
+  margin: 0px;
+  background-color: hsl(209, 94%, 32%);
+  color: white;
+  padding: 5% 0% 5% 0%;
+}
+
+.cardCliente img {
+  margin-top: 50px;
+  width: 100px;
+}
+
+.cardCliente h2 {
+  text-align: center;
+  padding: 0% 0% 5% 0%;
+}
+
+.filiais {
+  text-align: center;
+}
+.filiais h3 {
+  margin: 0px;
+  margin-bottom: 80px;
+  background-color: hsl(209, 94%, 32%);
+  color: white;
+  padding: 5% 0% 5% 0%;
+}
