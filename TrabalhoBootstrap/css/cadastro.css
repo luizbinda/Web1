@@ -1,0 +1,45 @@
+label {
+  size: 14px;
+  font-weight: bold;
+}
+
+input {
+  border-radius: 3px;
+  border: 0.5px solid hsl(209, 94%, 82%);
+  width: 100%;
+  padding: 5px;
+}
+
+.container2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 10px;
+
+  width: 100%;
+}
+
+.Botao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.Botao input {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: hsl(209, 94%, 32%);
+  color: #fff;
+  margin-top: 15px;
+}
+
+.Botao input:hover {
+  background-color: hsl(209, 94%, 22%);
+  color: #fff;
+}
+
+select {
+  width: 100%;
+}

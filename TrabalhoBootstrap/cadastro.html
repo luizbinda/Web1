@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="./css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="./css/bootstrap.css" />
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/empresa.css" />
+    <link rel="stylesheet" href="./css/cadastro.css" />
+    <title>Garotos de Programa SA</title>
+  </head>
+  <body>
+    <div class="container">
+      <div id="home" class="row">
+        <div class="col-xs-12 col-sm-3 col-md-3">
+          <img class="logo" src="imagens/logo.jpg" alt="Logo" />
+        </div>
+        <div class="col-xs-12 col-sm-9 col-md-9">
+          <div class="menu">
+            <ul>
+              <li>
+                <a href="./home.html"><strong>Home</strong></a>
+              </li>
+              <li>
+                <a href="./home.html#servicos"><strong>Serviços</strong></a>
+              </li>
+              <li>
+                <a href="./home.html#filiais"><strong>Filiais</strong></a>
+              </li>
+              <li>
+                <a href="./home.html#clientes"><strong>Clientes</strong></a>
+              </li>
+              <li>
+                <a href="./home.html#fale_conosco"
+                  ><strong>Fale Conosco</strong></a
+                >
+              </li>
+              <li>
+                <a href="./contatos.html"><strong>Contatos</strong></a>
+              </li>
+              <li>
+                <a href="./cadastro.html"><strong>Cadastro</strong></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <form action="#">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="container2">
+              <label>Nome fantasia</label>
+              <input id="Nome" name="Nome" type="text" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>CNPJ</label>
+              <input id="CNPJ" name="CNPJ" type="text" />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>Razão social</label>
+              <input id="RazaoSocial" name="RazaoSocial" type="text" />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>Inscrição estadual</label>
+              <input
+                id="InscricaoEstadual"
+                name="InscricaoEstadual"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>Numero de Filiais</label>
+              <input
+                id="Filiais"
+                name="Filiais"
+                type="range"
+                min="1"
+                max="10"
+                value="5"
+                step="1"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="container2">
+              <label>nome de contato</label>
+              <input id="NomeContato" name="NomeContato" type="text" />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>Telefone</label>
+              <input id="Telefone" name="Telefone" type="text" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>data de fundação da empresa</label>
+              <input id="DataFundacao" name="DataFundacao" type="date" />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>cor da fachada da empresa</label>
+              <input id="Cor" name="Cor" type="color" />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label for="cidade">Cidade</label>
+              <select name="cidade" id="cidade">
+                <option>Selecione</option>
+                <option value="1">Aimores</option>
+                <option value="2">Baixo Guandu</option>
+                <option value="3">Colatina</option>
+                <option value="4">Vitoria</option>
+                <option value="5">Belo Horizonte</option>
+                <option value="6">Governador Valadares</option>
+                <option value="7">Itueta</option>
+                <option value="8">Resplendor</option>
+                <option value="9">Brasilia</option>
+                <option value="10">São Paulo</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="container2">
+              <label>Estado</label>
+              <select name="cidade" id="cidade">
+                <option>Selecione</option>
+                <option value="1">Minas Gerais</option>
+                <option value="2">Espiro Santo</option>
+                <option value="3">Rio de Janeiro</option>
+                <option value="4">Amazonas </option>
+                <option value="5">Alagoas </option>
+                <option value="6">Ceará </option>
+                <option value="7">Distrito Federal</option>
+                <option value="8">Bahia</option>
+                <option value="9">Acre</option>
+                <option value="10">São Paulo</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="container2">
+              <label>email</label>
+              <input class="inputs" id="Email" name="Email" type="email" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="container2">
+              <label>usuário</label>
+              <input id="User" name="User" type="text" />
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="container2">
+              <label>senha</label>
+              <input id="Senha" name="Senha" type="password" />
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="container2">
+              <label>Confirmar Senha</label>
+              <input
+                id="ConfirmarSenha"
+                name="ConfirmarSenha"
+                type="password"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="Botao">
+            <div class="col-sm-12">
+              <input type="submit" value="Cadastrar" />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
