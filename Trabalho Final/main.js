@@ -1,23 +1,89 @@
 const modal = document.getElementById("modal_body");
 const fecharModal = document.getElementById("btnFechar");
 
-const createInput = (content, tipo, classe, disable = false) => {
+// const api = "http://localhost:3333";
+
+const api = "https://backend-locadora.herokuapp.com";
+
+const store = (route, body) => {
+  fetch(`${api}/${route}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      if (Array.isArray(json)) {
+        json.map((data) => alert(data.message));
+      } else {
+        alert("Cadastrado feito com sucesso!");
+      }
+    });
+};
+
+const update = (route, body) => {
+  fetch(`${api}/${route}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json, text/plain, */*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      if (Array.isArray(json)) {
+        json.map((data) => alert(data.message));
+      } else {
+        alert("Atualização feita com sucesso!");
+      }
+    });
+};
+
+const index = async (route) => {
+  const response = [];
+  await fetch(`${api}/${route}`)
+    .then((response) => response.json())
+    .then((json) => json.map((item) => response.push(item)));
+  return response;
+};
+
+const show = async (route, id) => {
+  if (!id) return false;
+  let response = null;
+  await fetch(`${api}/${route}/${id}`)
+    .then((response) => response.status === 200 && response.json())
+    .then((json) => (response = json));
+  return response;
+};
+
+const deleteItem = (route, id) => {
+  fetch(`${api}/${route}/${id}`, { method: "DELETE" }).then((response) => {
+    response.status === 204 && alert("Excluido com sucesso!");
+    response.status === 404 &&
+      response.json().then((json) => json.map((data) => alert(data.message)));
+  });
+};
+
+const createInput = (content, tipo, classe, id, disable = false) => {
   const div = document.createElement("div");
-  div.setAttribute("class", "input-group flex-nowrap");
 
   const span = document.createElement("span");
   span.setAttribute("class", "input-group-text");
   span.appendChild(document.createTextNode(content));
 
   const divContent = document.createElement("div");
-  div.setAttribute("class", "input-group-prepend");
-  div.setAttribute("id", `div-${content}`);
+  div.setAttribute("class", "input-group-prepend margin");
+  div.setAttribute("id", `div-${id}`);
   divContent.appendChild(span);
 
   const input = document.createElement("input");
   input.setAttribute("type", tipo);
   input.setAttribute("class", classe);
-  input.setAttribute("id", content);
+  input.setAttribute("id", id);
   input.setAttribute("placeholder", content);
   input.setAttribute("aria-label", content);
   input.setAttribute("aria-describedby", "addon-wrapping");
@@ -30,14 +96,15 @@ const createInput = (content, tipo, classe, disable = false) => {
 
 const createSelect = (tipo, nome, multiple, elements) => {
   const div = document.createElement("div");
-  div.setAttribute("class", "input-group flex-nowrap");
+
+  div.setAttribute("id", `div-${tipo}`);
 
   const span = document.createElement("span");
   span.setAttribute("class", "input-group-text");
   span.appendChild(document.createTextNode(nome));
 
   const divContent = document.createElement("div");
-  div.setAttribute("class", "input-group-prepend");
+  div.setAttribute("class", "input-group-prepend margin");
   divContent.appendChild(span);
 
   const select = document.createElement("select");
@@ -51,8 +118,8 @@ const createSelect = (tipo, nome, multiple, elements) => {
     option.setAttribute(`id_tipo`, element.id);
     option.setAttribute(`nome_tipo`, tipo);
     tipo === "Número de Série"
-      ? option.appendChild(document.createTextNode(element[tipo]))
-      : option.appendChild(document.createTextNode(element.Nome));
+      ? option.appendChild(document.createTextNode(element["numSerie"]))
+      : option.appendChild(document.createTextNode(element.nome));
     select.appendChild(option);
   });
 
@@ -62,30 +129,13 @@ const createSelect = (tipo, nome, multiple, elements) => {
   return div;
 };
 
-const buscarElementos = (tipo) => {
-  const elements = JSON.parse(localStorage.getItem(tipo));
-
-  if (!elements) {
-    localStorage.setItem(tipo, JSON.stringify([]));
-    return JSON.parse(localStorage.getItem(tipo));
-  }
-  return elements;
-};
-
-const saveType = (tipo) => {
-  const elements = buscarElementos(tipo);
+const saveType = async (tipo) => {
   const inputs = [...modal.getElementsByTagName("input")];
   const selects = [...modal.getElementsByTagName("select")];
 
   const id = document.getElementById("id").value;
-  const element = elements.find((cadastro) => cadastro.id === id);
-  !element && (inputs[0].value = elements.length + 1);
 
-  if (inputs.some((element) => !element.value)) {
-    alert("É Necessario preencher todos os campos para salvar!");
-    !element && (inputs[0].value = "");
-    return;
-  }
+  const element = await show(tipo, id);
 
   const insert = {};
   element
@@ -93,214 +143,162 @@ const saveType = (tipo) => {
         inputs.forEach((input) => (element[input.id] = input.value));
         selects.forEach((select) => {
           const selecteds = [...select.children];
-          selecteds.forEach((selected) => {
-            select[selected.index].selected = selected.selected;
-            selected.index === 0
-              ? (() => {
-                  element[selected.attributes.nome_tipo.value] = [];
-                  element[selected.attributes.nome_tipo.value].push({
-                    nome: selected.value,
-                    id_tipo: selected.attributes.id_tipo.value,
-                    selected: selected.selected ? true : false,
-                  });
-                })()
-              : (() => {
-                  element[selected.attributes.nome_tipo.value].push({
-                    nome: selected.value,
-                    id_tipo: selected.attributes.id_tipo.value,
-                    selected: selected.selected ? true : false,
-                  });
-                })();
-          });
+          if (select.attributes.multiple) {
+            selecteds.forEach((selected) => {
+              if (
+                element[`${selected.attributes.nome_tipo.value}_id`] ===
+                undefined
+              )
+                element[`${selected.attributes.nome_tipo.value}_id`] = [];
+
+              if (selected.selected)
+                element[`${selected.attributes.nome_tipo.value}_id`].push(
+                  selected.attributes.id_tipo.value
+                );
+            });
+          } else {
+            selecteds.forEach((selected) => {
+              select[selected.index].selected = selected.selected;
+              selected.attributes.nome_tipo.value === "Número de Série"
+                ? (element["item_id"] =
+                    select[select.selectedIndex].attributes.id_tipo.value)
+                : (element[`${selected.attributes.nome_tipo.value}_id`] =
+                    select[select.selectedIndex].attributes.id_tipo.value);
+            });
+          }
         });
+        update(tipo, element);
       })()
     : (() => {
         inputs.forEach((input) => (insert[input.id] = input.value));
         selects.forEach((select) => {
           const selecteds = [...select.children];
-          selecteds.forEach((selected) => {
-            select[selected.index].selected = selected.selected;
-            if (insert[selected.attributes.nome_tipo.value] === undefined) {
-              insert[selected.attributes.nome_tipo.value] = [];
-              insert[selected.attributes.nome_tipo.value].push({
-                nome: selected.value,
-                id_tipo: select[select.selectedIndex].attributes.id_tipo.value,
-                selected: selected.selected ? true : false,
-              });
-            } else {
-              insert[selected.attributes.nome_tipo.value].push({
-                nome: selected.value,
-                id_tipo: select[select.selectedIndex].attributes.id_tipo.value,
-                selected: selected.selected ? true : false,
-              });
-            }
-          });
+          if (select.attributes.multiple) {
+            selecteds.forEach((selected) => {
+              if (
+                insert[`${selected.attributes.nome_tipo.value}_id`] ===
+                undefined
+              )
+                insert[`${selected.attributes.nome_tipo.value}_id`] = [];
+
+              if (selected.selected)
+                insert[`${selected.attributes.nome_tipo.value}_id`].push(
+                  selected.attributes.id_tipo.value
+                );
+            });
+          } else {
+            selecteds.forEach((selected) => {
+              select[selected.index].selected = selected.selected;
+              selected.attributes.nome_tipo.value === "Número de Série"
+                ? (insert["item_id"] =
+                    select[select.selectedIndex].attributes.id_tipo.value)
+                : (insert[`${selected.attributes.nome_tipo.value}_id`] =
+                    select[select.selectedIndex].attributes.id_tipo.value);
+            });
+          }
         });
-        elements.push(insert);
+        store(tipo, insert);
       })();
 
-  localStorage.setItem(tipo, JSON.stringify(elements));
-
-  alert("Salvo com sucesso!");
   fecharModal.click();
 };
 
-const verificarItemLocado = (numeroDeSerie) => {
-  const item = getElement("item", "Número de Série", numeroDeSerie);
-  return item.locado;
-};
+const calcularValoreData = async () => {
+  const item = document.getElementById("Item");
 
-const saveLocacao = () => {
-  let elements = buscarElementos("locacao");
-  let id = document.getElementById("id").value;
-  let element = elements.find((cadastro) => cadastro.id === id);
-
-  if (!element) {
-    const numeroDeSerie = document.getElementById("Item Locado").value;
-    if (verificarItemLocado(numeroDeSerie)) {
-      alert("Esse item já esta locado!");
-      return;
-    }
-  }
-
-  saveType("locacao");
-  elements = buscarElementos("locacao");
-  id = document.getElementById("id").value;
-  element = elements.find((cadastro) => cadastro.id === id);
-
-  const items = buscarElementos("item");
-  const itemSelected = element["Número de Série"].find(
-    (item) => item.selected === true
-  );
-  const index = items.findIndex(
-    (cadastro) => cadastro["Número de Série"] === itemSelected.nome
-  );
-  const item = getElement(
+  const response_item = await show(
     "item",
-    "Número de Série",
-    element["Número de Série"][index].nome
-  );
-
-  item.locado = true;
-  item.id_locado = element.id;
-  items[index] = item;
-
-  localStorage.setItem("item", JSON.stringify(items));
-};
-
-const getElement = (tipoElement, tipoSearch, search) => {
-  const elements = buscarElementos(tipoElement);
-  const element = elements.find((element) => element[tipoSearch] == search);
-
-  return element;
-};
-
-const calcularValor = () => {
-  const item = document.getElementById("Item Locado");
-  const titulo = getElement(
-    "titulo",
-    "id",
     item.options[item.selectedIndex].attributes.id_tipo.value
   );
-  const classe = getElement("classe", "id", titulo.classe[0].id_tipo);
+  const valor = document.getElementById("valor");
+  valor.value = response_item.titulo.classe.valor;
 
-  const valor = document.getElementById("Valor");
-  valor.value = classe.Valor;
-};
-
-const calcularDataDeEntrega = () => {
-  const item = document.getElementById("Item Locado");
-  const titulo = getElement(
-    "titulo",
-    "id",
-    item.options[item.selectedIndex].attributes.id_tipo.value
-  );
-  const classe = getElement("classe", "id", titulo.classe[0].id_tipo);
-
-  const dataDevolucaoInput = document.getElementById("Data de Devolução");
+  const dataDevolucaoInput = document.getElementById("data_devolucao_prevista");
 
   const dataDevolucao = new Date();
   dataDevolucao.setDate(
-    dataDevolucao.getDate() + Number(classe["Dias para devolução"])
+    dataDevolucao.getDate() + response_item.titulo.classe.prazo_devolucao
   );
   const dataArray = dataDevolucao.toLocaleDateString("pt-BR").split("/");
 
   dataDevolucaoInput.value = `${dataArray[2]}-${dataArray[1]}-${dataArray[0]}`;
 };
 
-const saveCliente = (tipo) => {
+const saveCliente = async () => {
+  const select_socio = document.getElementById("Sócio");
+  if (select_socio) {
+    const socio_id =
+      select_socio[select_socio.selectedIndex].attributes.id_tipo.value;
+    const dependetes = await index(`cliente?cliente_id=${socio_id}`);
+    if (dependetes.length >= 3) {
+      alert("Este Sócio já atingiu o numero máximo de depentes");
+      return;
+    }
+  }
   saveType("cliente");
-  const elements = buscarElementos("cliente");
-  const id = document.getElementById("id").value;
-  const element = elements.find((cadastro) => cadastro.id === id);
-  element.estaAtivo = true;
-  element.tipo = tipo;
-  localStorage.setItem("cliente", JSON.stringify(elements));
 };
 
-const getCliente = (tipo) => {
-  const elements = buscarElementos("cliente");
-  elements.forEach((element, index) => {
-    !(element.tipo === tipo) && elements.splice(index, 1);
-  });
-
-  return elements;
-};
-
-const getAttributes = (id, element) => {
-  const atorSelecionado = element.find((ator) => ator.id == id);
-
-  if (!atorSelecionado) {
+const getAttributes = async (id, tipo) => {
+  const element = await show(tipo, id);
+  if (!element) {
     alert(`Id não encontrado!`);
     return;
   }
 
-  [...modal.getElementsByTagName("input")].forEach(
-    (input) => (input.value = atorSelecionado[input.id])
-  );
+  [...modal.getElementsByTagName("input")].forEach((input) => {
+    if (input.attributes.type.value === "date") {
+      const data_formatada = element[input.id].split("T");
+      input.value = data_formatada[0];
+    } else {
+      input.value = element[input.id];
+    }
+  });
 
   [...modal.getElementsByTagName("select")].forEach((select) => {
     const selecteds = [...select.children];
-    selecteds.forEach((selected) => {
-      select[selected.index].selected = atorSelecionado[
-        selected.attributes.nome_tipo.value
-      ][selected.index].selected
-        ? true
-        : false;
-    });
+    if (select.attributes.multiple) {
+      selecteds.forEach((options) => {
+        element[options.attributes.nome_tipo.value].forEach((elementItem) => {
+          if (
+            Number(options.attributes.id_tipo.value) ===
+            elementItem[`${options.attributes.nome_tipo.value}_id`]
+          )
+            select[options.index].selected = true;
+        });
+      });
+    } else {
+      selecteds.forEach((options) => {
+        if (
+          Number(options.attributes.id_tipo.value) ===
+          element[options.attributes.nome_tipo.value].id
+        )
+          select[options.index].selected = true;
+      });
+    }
   });
 };
 
-const deleteAttribute = (id, tipo) => {
-  const elements = buscarElementos(tipo);
+const deleteAttribute = async (id, tipo) => {
+  const element = await show(tipo, id);
 
-  const index = elements.findIndex((element) => element.id == id);
-  if (index === -1) {
+  if (!element) {
     alert(`Id não encontrado!`);
     fecharModal.click();
     return;
   }
-
   const excluir = confirm("Tem certeza que deseja excluir?");
-
   if (!excluir) return;
-
-  elements.splice(
-    elements.findIndex((element) => element.id == id),
-    1
-  );
-
-  localStorage.setItem(tipo, JSON.stringify(elements));
+  await deleteItem(tipo, id);
   fecharModal.click();
 };
 
-const buscarItemPorNumerDeSerie = (numeroDeSerie) => {
-  const item = getElement("item", "Número de Série", numeroDeSerie[0].value);
-  const cliente = document.getElementById("Cliente");
-  const valor = document.getElementById("Valor");
-  const data = document.getElementById("Data de Devolução");
+const buscarItemPorNumerDeSerie = async (numeroDeSerie) => {
+  const item = await show("item", `${numeroDeSerie[0].value}?numSerie=true`);
+  const cliente = document.getElementById("cliente");
+  const valor = document.getElementById("valor");
+  const data = document.getElementById("data_devolucao");
 
-  if (!item || !item.locado) {
+  if (!item || !item.locacao_id) {
     data.value = "";
     valor.value = "";
     cliente.value = "";
@@ -309,226 +307,349 @@ const buscarItemPorNumerDeSerie = (numeroDeSerie) => {
     };
     alert("Item não Alocado");
   } else {
-    const locacao = getElement("locacao", "id", item.id_locado);
-    locacao.cliente.forEach((clienteItem) => {
-      clienteItem.selected && (cliente.value = clienteItem.nome);
-    });
-    data.value = locacao["Data de Devolução"];
-    valor.value = locacao.Valor;
-    document.getElementById("save").onclick = () =>
-      realizarDevolocao(locacao.id);
+    const locacao = await show("locacao", item.locacao_id);
+    const data_devolucao_prevista_array = locacao.data_devolucao_prevista.split(
+      "T"
+    );
+    const data_devolucao_comparacao = new Date(
+      data_devolucao_prevista_array[0]
+    ).getTime();
+
+    const data_atual = new Date().toLocaleDateString("en");
+
+    const data_atual_comparacao = new Date(data_atual).getTime();
+
+    if (data_atual_comparacao < data_devolucao_comparacao)
+      valor.value = locacao.valor + locacao.multa;
+    else valor.value = locacao.valor;
+
+    cliente.value = locacao.cliente.nome;
+    const data_formatada = locacao.data_locacao.split("T");
+    data.value = data_formatada[0];
+    const { id } = locacao;
+    document.getElementById("save").onclick = () => {
+      store("devolucao", { id });
+      fecharModal.click();
+    };
   }
 };
 
-const realizarDevolocao = (id) => {
-  const elements = buscarElementos("locacao");
-  const element = elements.find((locacao) => locacao.id === id);
-
-  const items = buscarElementos("item");
-  const itemSelected = element["Número de Série"].find(
-    (item) => item.selected === true
+const consultarTipo = async (tipo, value) => {
+  const titulo = document.getElementById("div-titulo");
+  titulo && modal.removeChild(titulo);
+  modal.appendChild(
+    createSelect(
+      "titulo",
+      "Título",
+      false,
+      await index(`titulo?${tipo}=${value}`)
+    )
   );
-  const index = items.findIndex(
-    (item) => item["Número de Série"] === itemSelected.nome
-  );
-  const item = getElement(
-    "item",
-    "Número de Série",
-    element["Número de Série"][index].nome
-  );
-
-  delete item.locado;
-  delete item.id_locado;
-
-  const desalocarItem = () => {
-    const elements = buscarElementos("locacao");
-
-    const index = elements.findIndex((locacao) => locacao.id == element.id);
-    if (index === -1) {
-      alert(`Id não encontrado!`);
-      fecharModal.click();
-      return;
-    }
-
-    elements.splice(
-      elements.findIndex((element) => element.id == id),
-      1
-    );
-
-    localStorage.setItem("locacao", JSON.stringify(elements));
-  };
-  desalocarItem();
-  items[index] = item;
-
-  localStorage.setItem("item", JSON.stringify(items));
-  fecharModal.click();
 };
 
-const preencherModal = (tipo) => {
+const consultas = async (tipo_consulta) => {
+  modal.textContent = "";
+  const div = document.createElement("div");
+  div.setAttribute("class", "input-group flex-nowrap buscar-flex");
+
+  const tipo_busca = document.createElement("p");
+  tipo_busca.setAttribute("class", "input-group-text");
+  tipo_busca.appendChild(document.createTextNode("Tipo de Consulta"));
+
+  const button_buscar_nome = document.createElement("button");
+  button_buscar_nome.setAttribute("class", "btn btn-primary");
+  button_buscar_nome.appendChild(document.createTextNode("Nome"));
+
+  const button_buscar_categoria = document.createElement("button");
+  button_buscar_categoria.setAttribute("class", "btn btn-primary");
+  button_buscar_categoria.appendChild(document.createTextNode("Categoria"));
+
+  const button_buscar_ator = document.createElement("button");
+  button_buscar_ator.setAttribute("class", "btn btn-primary");
+  button_buscar_ator.appendChild(document.createTextNode("Ator"));
+
+  button_buscar_nome.onclick = () => consultas("nome");
+  button_buscar_categoria.onclick = () => consultas("categoria");
+  button_buscar_ator.onclick = () => consultas("ator");
+
+  div.appendChild(tipo_busca);
+  div.appendChild(button_buscar_nome);
+  div.appendChild(button_buscar_categoria);
+  div.appendChild(button_buscar_ator);
+
+  modal.appendChild(div);
+
+  const button = document.createElement("button");
+  button.setAttribute("class", "btn btn-primary");
+  button.appendChild(document.createTextNode("Buscar"));
+
+  switch (tipo_consulta) {
+    case "nome":
+      modal.appendChild(
+        createSelect("titulo", "Título", false, await index("titulo"))
+      );
+      document.getElementById("buscar").onclick = () =>
+        realizarConsulta(
+          `${
+            document.getElementById("Título")[
+              document.getElementById("Título").selectedIndex
+            ].attributes.id_tipo.value
+          }`,
+          "titulo"
+        );
+      break;
+    case "categoria":
+      const categoria = createInput(
+        "Categoria",
+        "text",
+        "form-control",
+        "categoria"
+      );
+      categoria.appendChild(button);
+      button.onclick = () =>
+        consultarTipo("categoria", document.getElementById("categoria").value);
+      modal.appendChild(categoria);
+
+      break;
+    case "ator":
+      const ator = createSelect("ator", "Ator", false, await index("ator"));
+      ator.appendChild(button);
+
+      button.onclick = () =>
+        consultarTipo(
+          "ator",
+          document.getElementById("Ator")[
+            document.getElementById("Ator").selectedIndex
+          ].attributes.id_tipo.value
+        );
+      modal.appendChild(ator);
+
+      break;
+    default:
+      break;
+  }
+};
+
+const realizarConsulta = async (id) => {
+  const element = await show("titulo", id);
+
+  const titulo = document.getElementById("div-titulo");
+  titulo && modal.removeChild(titulo);
+
+  modal.appendChild(createInput("Nome", "text", "form-control", "nome", true));
+  modal.appendChild(
+    createInput("sinopse", "text", "form-control", "sinopse", true)
+  );
+  modal.appendChild(
+    createInput("categoria", "text", "form-control", "categoria", true)
+  );
+  modal.appendChild(createInput("ano", "date", "form-control", "ano", true));
+  modal.appendChild(
+    createInput("diretor", "text", "form-control", "diretor", true)
+  );
+  modal.appendChild(
+    createInput("classe", "text", "form-control", "classe", true)
+  );
+
+  element.ator.forEach((ator) => {
+    modal.appendChild(
+      createInput("Ator", "text", "form-control", `nome${ator.id}`, true)
+    );
+  });
+
+  document.getElementById("nome").value = element.nome;
+  document.getElementById("sinopse").value = element.sinopse;
+  document.getElementById("categoria").value = element.categoria;
+  const data_formatada = element.ano.split("T");
+  document.getElementById("ano").value = data_formatada[0];
+  document.getElementById("diretor").value = element.diretor.nome;
+  document.getElementById("classe").value = element.classe.nome;
+
+  element.ator.forEach((ator) => {
+    document.getElementById(`nome${ator.id}`).value = ator.ator.nome;
+  });
+};
+
+const preencherModal = async (tipo) => {
   const title = document.getElementById("exampleModalLabel");
   const saveButton = document.getElementById("save");
   const searchButton = document.getElementById("buscar");
   const deleteButton = document.getElementById("deletar");
   modal.textContent = "";
-  modal.appendChild(createInput("id", "number", "form-control"));
+  modal.appendChild(createInput("id", "number", "form-control", "id"));
+  const exluir_id = document.getElementById("div-id");
 
   switch (tipo) {
     case "ator":
       title.textContent = "Ator";
-      modal.appendChild(createInput("Nome", "text", "form-control"));
+      modal.appendChild(createInput("Nome", "text", "form-control", "nome"));
 
       saveButton.onclick = () => saveType("ator");
       searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("ator")
-        );
+        getAttributes(document.getElementById("id").value, "ator");
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "ator");
-        alert("Excluido com sucesso!");
       };
       break;
 
     case "classe":
       title.textContent = "Classe";
-      modal.appendChild(createInput("Nome", "text", "form-control"));
-      modal.appendChild(createInput("Valor", "text", "form-control"));
+      modal.appendChild(createInput("Nome", "text", "form-control", "nome"));
+      modal.appendChild(createInput("Valor", "text", "form-control", "valor"));
       modal.appendChild(
-        createInput("Dias para devolução", "number", "form-control")
+        createInput(
+          "Dias para devolução",
+          "number",
+          "form-control",
+          "prazo_devolucao"
+        )
       );
       saveButton.onclick = () => saveType("classe");
       searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("classe")
-        );
+        getAttributes(document.getElementById("id").value, "classe");
 
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "classe");
-        alert("Excluido com sucesso!");
       };
       break;
 
     case "diretor":
       title.textContent = "Diretor";
-      modal.appendChild(createInput("Nome", "text", "form-control"));
+      modal.appendChild(createInput("Nome", "text", "form-control", "nome"));
       saveButton.onclick = () => saveType("diretor");
       searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("diretor")
-        );
+        getAttributes(document.getElementById("id").value, "diretor");
 
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "diretor");
-        alert("Excluido com sucesso!");
       };
       break;
 
     case "titulo":
       title.textContent = "Titulo";
-      modal.appendChild(createInput("Nome", "text", "form-control"));
+      modal.appendChild(createInput("Nome", "text", "form-control", "nome"));
       modal.appendChild(
-        createSelect("diretor", "Diretor", false, buscarElementos("diretor"))
+        createSelect("diretor", "Diretor", false, await index("diretor"))
       );
       modal.appendChild(
-        createSelect("ator", "Atores", true, buscarElementos("ator"))
+        createSelect("ator", "Atores", true, await index("ator"))
       );
-      modal.appendChild(createInput("Ano", "date", "form-control"));
-      modal.appendChild(createInput("Sinopse", "text", "form-control"));
-      modal.appendChild(createInput("Categoria", "text", "form-control"));
+      modal.appendChild(createInput("Ano", "date", "form-control", "ano"));
       modal.appendChild(
-        createSelect("classe", "Classe", false, buscarElementos("classe"))
+        createInput("Sinopse", "text", "form-control", "sinopse")
+      );
+      modal.appendChild(
+        createInput("Categoria", "text", "form-control", "categoria")
+      );
+      modal.appendChild(
+        createSelect("classe", "Classe", false, await index("classe"))
       );
       saveButton.onclick = () => saveType("titulo");
       searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("titulo")
-        );
+        getAttributes(document.getElementById("id").value, "titulo");
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "titulo");
-        alert("Excluido com sucesso!");
       };
       break;
 
     case "item":
       title.textContent = "Item";
       modal.appendChild(
-        createInput("Número de Série", "number", "form-control")
+        createInput("Número de Série", "number", "form-control", "numSerie")
       );
       modal.appendChild(
-        createSelect("titulo", "Titulo", true, buscarElementos("titulo"))
+        createSelect("titulo", "Titulo", false, await index("titulo"))
       );
       modal.appendChild(
-        createInput("Data de aquisição", "date", "form-control")
+        createInput(
+          "Data de aquisição",
+          "date",
+          "form-control",
+          "data_aquisicao"
+        )
       );
-      modal.appendChild(createInput("Tipo", "text", "form-control"));
+      modal.appendChild(createInput("Tipo", "text", "form-control", "tipo"));
       saveButton.onclick = () => saveType("item");
       searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("item")
-        );
+        getAttributes(document.getElementById("id").value, "item");
 
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "item");
-        alert("Excluido com sucesso!");
       };
       break;
 
     case "socio":
       title.textContent = "Cliente";
-      modal.appendChild(createInput("Nome", "text", "form-control"));
-      modal.appendChild(createInput("Endereço", "text", "form-control"));
-      modal.appendChild(createInput("telefone", "text", "form-control"));
+      modal.appendChild(createInput("Nome", "text", "form-control", "nome"));
+      modal.appendChild(
+        createInput("Endereço", "text", "form-control", "endereco")
+      );
+      modal.appendChild(
+        createInput("telefone", "text", "form-control", "telefone")
+      );
       modal.appendChild(
         createSelect("sexo", "Sexo", false, [
-          { id: "1", Nome: "Masculino" },
-          { id: "2", Nome: "Feminino" },
+          { id: "Masculino", nome: "Masculino" },
+          { id: "Masculino", nome: "Feminino" },
         ])
       );
-      modal.appendChild(createInput("CPF", "text", "form-control"));
+      modal.appendChild(createInput("CPF", "text", "form-control", "cpf"));
       modal.appendChild(
-        createInput("Data de nascimento", "date", "form-control")
+        createInput(
+          "Data de nascimento",
+          "date",
+          "form-control",
+          "data_nascimento"
+        )
       );
 
-      saveButton.onclick = () => saveCliente("socio");
+      saveButton.onclick = saveCliente;
       searchButton.onclick = () =>
-        getAttributes(document.getElementById("id").value, getCliente("socio"));
+        getAttributes(
+          `${document.getElementById("id").value}?socio=true`,
+          "cliente"
+        );
 
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "cliente");
-        alert("Excluido com sucesso!");
       };
 
       break;
 
     case "dependente":
       title.textContent = "Cliente";
-      modal.appendChild(createInput("Nome", "text", "form-control"));
+      modal.appendChild(createInput("Nome", "text", "form-control", "nome"));
       modal.appendChild(
         createSelect("sexo", "Sexo", false, [
-          { id: "1", Nome: "Masculino" },
-          { id: "2", Nome: "Feminino" },
+          { id: "1", nome: "Masculino" },
+          { id: "2", nome: "Feminino" },
         ])
       );
       modal.appendChild(
-        createInput("Data de nascimento", "date", "form-control")
+        createInput(
+          "Data de nascimento",
+          "date",
+          "form-control",
+          "data_nascimento"
+        )
       );
       modal.appendChild(
-        createSelect("socio", "Sócio", false, getCliente("socio"))
+        createSelect(
+          "socio",
+          "Sócio",
+          false,
+          await index("cliente?dependente=true")
+        )
       );
-      saveButton.onclick = () => saveCliente("dependente");
+      saveButton.onclick = saveCliente;
       searchButton.onclick = () =>
         getAttributes(
-          document.getElementById("id").value,
-          getCliente("dependente")
+          `${document.getElementById("id").value}?dependente=true`,
+          "cliente"
         );
 
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "cliente");
-        alert("Excluido com sucesso!");
       };
 
       break;
@@ -537,32 +658,38 @@ const preencherModal = (tipo) => {
       title.textContent = "Locação";
 
       modal.appendChild(
-        createSelect("cliente", "Cliente", false, buscarElementos("cliente"))
+        createSelect("cliente", "Cliente", false, await index("cliente"))
+      );
+
+      modal.appendChild(
+        createSelect("Número de Série", "Item", false, await index("item"))
+      );
+
+      modal.appendChild(
+        createInput("Valor", "number", "form-control", "valor")
       );
       modal.appendChild(
-        createSelect(
-          "Número de Série",
-          "Item Locado",
-          false,
-          buscarElementos("item")
+        createInput("Multa", "number", "form-control", "multa")
+      );
+      modal.appendChild(
+        createInput(
+          "Data de Devolução",
+          "date",
+          "form-control",
+          "data_devolucao_prevista"
         )
       );
 
-      modal.appendChild(createInput("Valor", "number", "form-control"));
-      modal.appendChild(
-        createInput("Data de Devolução", "date", "form-control")
-      );
+      calcularValoreData();
+      const item_select = document.getElementById("Item");
+      item_select.onchange = calcularValoreData;
 
-      saveButton.onclick = () => saveLocacao("locacao");
+      saveButton.onclick = () => saveType("locacao");
       searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("locacao")
-        );
+        getAttributes(document.getElementById("id").value, "locacao");
 
       deleteButton.onclick = () => {
         deleteAttribute(document.getElementById("id").value, "locacao");
-        alert("Excluido com sucesso!");
       };
 
       break;
@@ -571,46 +698,77 @@ const preencherModal = (tipo) => {
       title.textContent = "Devolução";
 
       modal.appendChild(
-        createInput("Número de Série", "number", "form-control")
+        createInput("Número de Série", "number", "form-control", "numSerie")
       );
 
-      const exluir_id = document.getElementById("div-id");
       exluir_id.textContent = "";
 
-      const numeroDeSerie = document.getElementById("div-Número de Série");
+      const numeroDeSerie = document.getElementById("div-numSerie");
 
       const button = document.createElement("button");
       button.setAttribute("class", "btn btn-primary");
       button.appendChild(document.createTextNode("Buscar"));
       numeroDeSerie.appendChild(button);
+
       button.onclick = () =>
         buscarItemPorNumerDeSerie(numeroDeSerie.getElementsByTagName("input"));
 
-      modal.appendChild(createInput("Cliente", "text", "form-control", true));
-      modal.appendChild(createInput("Valor", "number", "form-control", true));
       modal.appendChild(
-        createInput("Data de Devolução", "date", "form-control", true)
+        createInput("Cliente", "text", "form-control", "cliente", true)
       );
-
-      modal.appendChild(createInput("Valor", "text", "form-control"));
       modal.appendChild(
-        createInput("Data de Devolução", "date", "form-control")
+        createInput("Valor", "number", "form-control", "valor", true)
+      );
+      modal.appendChild(
+        createInput(
+          "Data de Devolução",
+          "date",
+          "form-control",
+          "data_devolucao",
+          true
+        )
       );
 
       saveButton.onclick = () => {
-        alert("Busque o numero de série que deseja desalocar antes de salvar!");
+        alert(
+          "Informe o numero de série que deseja desalocar antes de salvar!"
+        );
       };
 
-      searchButton.onclick = () =>
-        getAttributes(
-          document.getElementById("id").value,
-          buscarElementos("devolucao")
-        );
+      searchButton.setAttribute("disabled", true);
+      deleteButton.setAttribute("disabled", true);
+      document.getElementById("btn_close").onclick = () => {
+        searchButton.removeAttribute("disabled");
+        deleteButton.removeAttribute("disabled");
+      };
 
-      deleteButton.onclick = () => {};
-
+      fecharModal.onclick = () => {
+        searchButton.removeAttribute("disabled");
+        deleteButton.removeAttribute("disabled");
+      };
       break;
 
+    case "consultar":
+      title.textContent = "Consultas de Titulos";
+      exluir_id.textContent = "";
+      consultas("nome");
+
+      saveButton.setAttribute("disabled", true);
+      deleteButton.setAttribute("disabled", true);
+      document.getElementById("btn_close").onclick = () => {
+        saveButton.removeAttribute("disabled");
+        deleteButton.removeAttribute("disabled");
+      };
+
+      fecharModal.onclick = () => {
+        saveButton.removeAttribute("disabled");
+        deleteButton.removeAttribute("disabled");
+      };
+
+      searchButton.onclick = () => {
+        alert("Informe o Titulo que deseja buscar!");
+      };
+      break;
     default:
       break;
   }
@@ -644,13 +802,9 @@ document
   .addEventListener("click", () => preencherModal("locacao"));
 
 document
-  .getElementById("cadastrar_locacao")
-  .addEventListener("click", calcularValor);
-
-document
-  .getElementById("cadastrar_locacao")
-  .addEventListener("click", calcularDataDeEntrega);
-
-document
   .getElementById("cadastrar_devolucao")
   .addEventListener("click", () => preencherModal("devolucao"));
+
+document
+  .getElementById("consultar")
+  .addEventListener("click", () => preencherModal("consultar"));

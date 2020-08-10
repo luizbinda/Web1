@@ -14,8 +14,6 @@ body {
   background-image: url("https://static.alphacoders.com/thumbs_categories/20.jpg");
 }
 
-html {
-}
 .col button {
   width: 100%;
 }
@@ -25,4 +23,16 @@ html {
 
 .container {
   width: 100%;
+}
+
+.buscar-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.margin {
+  margin-bottom: 5px;
 }
