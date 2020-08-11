@@ -1,8 +1,6 @@
 const modal = document.getElementById("modal_body");
 const fecharModal = document.getElementById("btnFechar");
 
-// const api = "http://localhost:3333";
-
 const api = "https://backend-locadora.herokuapp.com";
 
 const store = (route, body) => {

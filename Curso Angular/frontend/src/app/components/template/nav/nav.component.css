@@ -1,0 +1,9 @@
+.side-nav {
+  background-color: #212121;
+  width: 200px;
+  height: 80vh;
+}
+
+.nav-list i {
+  padding-right: 15px;
+}
