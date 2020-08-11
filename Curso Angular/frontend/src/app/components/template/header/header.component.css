@@ -4,10 +4,12 @@
   height: 10.2vh;
 }
 
-.header a {
+a {
   display: flex;
   align-items: center;
   text-decoration: none;
+  cursor: pointer;
+  color: #fff;
 }
 
 .logo {

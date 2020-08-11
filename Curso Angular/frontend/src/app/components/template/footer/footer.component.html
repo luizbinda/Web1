@@ -1,7 +1,12 @@
 <mat-toolbar class="footer">
   <span>
     Desenvolvido
-    <i class="material-icons red v-middle">favorite</i>
+    <i
+      *myFor="let icon; em: ['favorite', 'favorite', 'favorite']"
+      class="material-icons v-middle"
+      appRed
+      >{{ icon }}</i
+    >
     por
     <span>
       Luiz Fernando Binda
